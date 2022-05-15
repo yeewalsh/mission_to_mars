@@ -3,10 +3,32 @@ from splinter import Browser
 from bs4 import BeautifulSoup as soup
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
+import datetime as dt
 
-# splinter setup
-executable_path = {'executable_path': ChromeDriverManager().install()}
-browser = Browser('chrome', **executable_path, headless=False)
+
+# set function to 'scrape_all' using below code and add mongo connection
+def scrape_all():
+    
+    # initialize headless driver for deployment / splinter setup
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=True)
+    
+    # set variables from mars_news function to pull it's data
+    news_title, news_paragraph = mars_news(browser)
+    
+    # run all scraping functions and store results in a dictionary
+    data = {
+        "news_title": news_title,
+        "news_paragraph": news_paragraph, 
+        "featured_image": featured_image(browser),
+        "facts": mars_facts(),
+        "last_modified": dt.datetime.now()
+    }
+    
+    # stop the webdriver and return data
+    browser.quit()
+    return data
+
 
 # function to scrape mars news site
 
@@ -26,8 +48,6 @@ def mars_news(browser):
     try:
     
         slide_elem = news_soup.select_one('div.list_text')
-        slide_elem.find('div', class_='content_title')
-
 
         # use the parent element to find the first 'a' tag and save it as 'news_title'
         news_title = slide_elem.find('div', class_='content_title').get_text()
@@ -42,9 +62,7 @@ def mars_news(browser):
     return news_title, news_p
 
 
-### Featured Images
-
-# declare and define the function
+# function to scrape the featured image
 def featured_image(browser):
 
     # Visit URL
@@ -73,9 +91,9 @@ def featured_image(browser):
     
     return img_url
 
-### Mars Info Table
 
-# define the function
+
+# function to scrape the mars info table
 def mars_facts():
     
     # add a try/ecxept for error handling
@@ -87,11 +105,12 @@ def mars_facts():
         return None
     
     # assign columns and set index of df
-    df.columns = ['description', 'Mars', 'Earth']
-    df.set_index('description', inplace=True)
+    df.columns = ['Description', 'Mars', 'Earth']
+    df.set_index('Description', inplace=True)
 
     # convert df to HTML format, add bootstrap
     return df.to_html()
 
-browser.quit()
-
+if __name__ == "__main__":
+    # if running as a script, print scraped data
+    print(scrape_all())
