@@ -45,6 +45,24 @@
                     </div>
                 </div>
             </div>
+            <!-- Hemisphere Images -->
+            <div class="row" id="hemisphere-image-title">
+                <div class="col-md-12">
+                    <h2>Mars Hemispheres</h2>
+                </div>
+            </div>
+            <div class="row" id="hemisphere-images">       
+                <div class="media">
+                    <div class="media-body">
+                        <ul>
+                            {% for hemisphere in mars.hemisphere_images %}
+                                <li><a href="{{img_url}}">Image</a>
+                                <li>{{title}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
     </div>
 </body>
 </html>
