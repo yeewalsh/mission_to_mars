@@ -22,12 +22,10 @@ def scrape_all():
         "news_paragraph": news_paragraph, 
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "hemisphere_images": hemisphere_images(browser),
+        "hemispheres": hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
     
-    # insert the hemisphere images dictionary into "data"
-    # data["hemisphere_images"] = hemisphere_images()
 
     # stop the webdriver and return data
     browser.quit()
@@ -117,7 +115,7 @@ def mars_facts():
 
 
 # function to scrape the hemisphere images
-def hemisphere_images(browser):
+def hemispheres(browser):
 
     # 1. Use browser to visit the URL 
     url = 'https://marshemispheres.com/'
